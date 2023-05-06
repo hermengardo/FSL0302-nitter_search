@@ -1,3 +1,3 @@
-# Verificar se os emojis são salvos em um csv	
+# Precisa parsear a query
 
-# Use um raise em get_page para quando não tiver mais página, e um try para a função que chama.
+# Implementar o fim de página 

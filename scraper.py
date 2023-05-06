@@ -8,10 +8,6 @@ from lxml import html
 import utils
 
 
-def main():
-    NitterSearch(query='política+lang%3Apt', random_time=True, random_interval=(0.01, 0.1))
-
-
 class NitterSearch:
     def __init__(self,
                  query: str,
@@ -19,8 +15,8 @@ class NitterSearch:
                  delay=0.01,
                  random_time=True,
                  random_interval=(0, 1),
-                 seed=42):
-        # Url and headers
+                 seed=42) -> None:
+        # Setting up the request
         url = f"https://nitter.net/search?f=tweets&q={query}"
         self._headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
                          "Accept": "*/*",
@@ -30,37 +26,75 @@ class NitterSearch:
                          "X-Requested-With": "XMLHttpRequest",
                          "Connection": "keep-alive"}
 
+        # Initialize publication count
+        self._count = 0
+
         # Set delay      
         random.seed(seed)
         if random_time:
-            self.delay = delay + random.uniform(*random_interval) 
+            self._delay = delay + random.uniform(*random_interval) 
         else:
-            self.delay = delay
+            self._delay = delay
+
+        # Set filepath
+        self._file_path = file_path
 
         # Start scraping
         self.scrape_page(url)
 
-    def html_parser(self, response):
+    def html_parser(self, response:requests.models.Response) -> html.HtmlElement:
         return html.fromstring(response.content.decode('utf-8'))
 
-    def scrape_page(self, url):
-        response = requests.request("GET", 
-                                    url,
-                                    headers=self._headers)
-        # Html Parser
-        tree = self.html_parser(response)
+    def scrape_page(self, url:str):
+        """
+            Scrapes Twitter-like publications from a search page of Nitter.net, and scrapes data from all pages of the search results.
+        """
+        page_count = 0
+        while True:
+            try:
+                # Send a GET request to the given URL with custom headers.
+                response = requests.request("GET", 
+                                            url,
+                                            headers=self._headers)
+                tree = self.html_parser(response) # Parse the HTML
+                
+                # Extract the URLs of the tweets from the parsed HTML tree
+                tweets = self.tweets_urls(tree)
+                
+                # Generate the URL of the next page to scrape based on the current page.
+                url = f'https://nitter.net/search{self.page_url(tree)}'
+                
+                # Scrape the publications for each tweet URL found.
+                self.scrape_publication(tweets)
+                page_count += 1
+                print(f"Page {page_count} collected")
+            except IndexError:
+                print('Finished')
+                break
 
-        # Tweets Urls
-        tweets = self.tweets_urls(tree)
+    def scrape_publication(self, urls:list) -> None:
+        """
+            Scrapes Twitter-like publications from a list of URLs and saves the scraped data as a CSV file.
 
-        # Next page url
-        next_page = self.page_url(tree)
-
-        # Scrape publications
-        self.scrape_publication(tweets)
-
-    def scrape_publication(self, urls):
-        # Init an empty array
+            The function scrapes the following data for each publication:
+            'fullname': Full name of the publication author
+            'username': Username of the publication author
+            'content': Text content of the publication
+            'tweet_published_at': Date and time when the publication was made
+            'n_comments': Number of comments on the publication
+            'n_retweets': Number of retweets of the publication
+            'n_quotes': Number of quotes of the publication
+            'n_hearts': Number of likes/hearts of the publication
+            'img_avatar': Profile picture of the publication author
+            'images': Images included in the publication
+            'videos': Videos included in the publication
+            'quote': Links to any quoted tweet or external content
+            'third_party': Links to any third-party content mentioned in the publication
+            'replied_by': Usernames of users who replied to the publication
+            'urls': URLs mentioned in the publication
+            'hashtags': Hashtags mentioned in the publication
+        """
+        # Initialize an empty dictionary to store the data for each tweet.
         data = {'fullname':[],
                 'username':[],
                 'content':[],
@@ -71,13 +105,14 @@ class NitterSearch:
                 'n_hearts':[],
                 'img_avatar':[],
                 'images':[],
+                'videos':[],
                 'quote':[],
                 'third_party':[],
-                'verified':[],
+                'replied_by':[],
                 'urls':[],
                 'hashtags':[]}
 
-        # Paths for text elements
+        # Define CSS selectors for each type of data to scrape
         text_fields = ['div#m.main-tweet a.fullname',
                        'div#m.main-tweet a.username',
                        'div#m.main-tweet div.tweet-content',
@@ -87,84 +122,91 @@ class NitterSearch:
                         'div#m.main-tweet span.icon-retweet',
                         'div#m.main-tweet span.icon-quote',
                         'div#m.main-tweet span.icon-heart']
-
-        # Path for images
         img_fields = ['div#m.main-tweet img.avatar',
-                      'div#m.main-tweet a.still-image img']
-
-        # Quotes and third-party urls
+                      'div#m.main-tweet a.still-image img',
+                      'div#m.main-tweet source']
         quote_fields = ['div#m.main-tweet a.quote-link',
                         'div#m.main-tweet a.card-container']
-
-        # All paths
         paths = text_fields + stats_fields + img_fields + quote_fields
 
+        # Loop through each tweet URL and scrape the data.
         for url in urls:
+            clean_url = f"https://nitter.net{url}"
             response = requests.request("GET", 
-                                        f"https://nitter.net/DyegoNascymento/status/1654917920131104770#m",
+                                        clean_url,
                                         headers=self._headers) # 
 
             tree = self.html_parser(response)
 
-            # Collect data
+            # Scrape text, stats, images, and links for each tweet.
             for field, key in zip(paths, data.keys()):
-                # text data
                 if field in text_fields:
                     data[key].append(self.get_text(tree, field))
-                # tweet stats
-                if field in stats_fields:
+                elif field in stats_fields:
                     data[key].append(self.get_stats(tree, field))
-                # image data
-                if field in img_fields:
+                elif field in img_fields:
                     data[key].append(self.get_img(tree, field))
-                # mentioning data
-                if field in quote_fields:
+                elif field in quote_fields:
                     data[key].append(self.get_urls(tree, field))
             
-            # Collect hashtags and urls
+            # Scrape data about who replied to the tweet.
+            data['replied_by'] = self.get_user_replies(tree, clean_url)
+
+            # Scrape hashtags and links mentioned in the tweet.
             hashtags, urls = self.get_hash_url(tree, 'div#m.main-tweet div.tweet-content > a')
             data['urls'].append(urls)
             data['hashtags'].append(hashtags)
-            data['verified'].append(self.get_verified(tree))
 
-            print(f"Collected: {len(data['username'])}") # Using username key as counter because all users must have username
-            print(data)
-            sleep(self.delay)
+            # Print progress and wait before scraping the next tweet.
+            self._count += 1
+            print(f"Collected: {self._count} | From {data['username'][-1]}") # Using username key as counter because all users must have username
+            sleep(self._delay)
+        # Save the scraped data as a CSV file.
+        utils.save_dict_as_csv(data, self._file_path)
 
-    def get_verified(self, tree):
-        if tree.cssselect('div#m.main-tweet span.icon-ok')[0].get('title') == "Verified account":
-            return True
-        return False
+    def get_user_replies(self, tree:html.HtmlElement, url:str) -> list:
+        usernames = [user.text_content() for user in tree.cssselect('div#r.replies a.username')]
+        while True:
+            try:
+                url_next_page = f"{url[:-2]}{self.page_url(tree)}"
+                response = requests.request("GET", 
+                                            url_next_page,
+                                            headers=self._headers)
+                tree = self.html_parser(response)
+                usernames += [user.text_content() for user in tree.cssselect('div#r.replies a.username')]
+            except IndexError:
+                usernames += [user.text_content() for user in tree.cssselect('div#r.replies a.username')]
+                return usernames
 
-    def get_text(self, tree, field):
+    def get_text(self, tree:html.HtmlElement, field:str) -> str:
         text = tree.cssselect(field)[0]
         try:
             return ''.join(text.text_content())
         except AttributeError:
             return ''
 
-    def get_img(self, tree, field):
+    def get_img(self, tree:html.HtmlElement, field:str) -> list:
         images = tree.cssselect(field)
         try:
             return [f"https://nitter.net{image.get('src').strip()}" for image in images]
-        except AttributeError: # If the element is not present, return an empty list
+        except AttributeError: # If element is not present, return an empty list
             return []
     
-    def get_urls(self, tree, field):
+    def get_urls(self, tree:html.HtmlElement, field:str) -> list:
         urls = tree.cssselect(field)
         try:
             return [url.get('href') for url in urls]
         except AttributeError:
             return []
 
-    def get_stats(self, tree, field):
+    def get_stats(self, tree:html.HtmlElement, field:str) -> int:
         stat = tree.cssselect(field)[0].getparent()
         try:
             return utils.string_to_int(stat.text_content().strip())
         except ValueError:
             return 0
 
-    def get_hash_url(self, tree, field):
+    def get_hash_url(self, tree:html.HtmlElement, field:str) -> list:
         elems = tree.cssselect(field)
         hashtags = [potential_hashtag.text_content() for potential_hashtag in elems 
                     if utils.is_hashtag(potential_hashtag.text_content())]
@@ -174,17 +216,11 @@ class NitterSearch:
 
         return hashtags, urls
 
-    def page_url(self, tree):
-        link = tree.cssselect('div.show-more > a')
-        if link is not None:
-            return f"https://nitter.net/search{link[0].get('href').strip()}"
-        else:
-            print("Finished.")
+    def page_url(self, tree:html.HtmlElement) -> str:
+        #  Extracts the URL of the next page from the HTML tree element.
+        link = tree.cssselect('div[class="show-more"] > a')
+        return link[0].get('href').strip()
 
-    def tweets_urls(self, tree):
-        # Extract links with class 'tweet-link'
+    def tweets_urls(self, tree:html.HtmlElement) -> list:
+        # Extracts URLs of tweets from the HTML tree element.
         return [a.get('href') for a in tree.cssselect('a.tweet-link')]
-        
-
-if __name__ == "__main__":
-    main()
