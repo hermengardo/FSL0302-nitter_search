@@ -22,3 +22,6 @@ def is_hashtag(text):
     match = re.search(pattern, text)
     if match:
         return True
+
+def string_to_int(number_str):
+    return int(number_str.replace(',', ''))

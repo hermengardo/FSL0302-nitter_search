@@ -9,10 +9,10 @@ import utils
 
 
 def main():
-    Scraper(query='pizza hoje', random_time=True, random_interval=(0.01, 0.1))
+    NitterSearch(query='política+lang%3Apt', random_time=True, random_interval=(0.01, 0.1))
 
 
-class Scraper:
+class NitterSearch:
     def __init__(self,
                  query: str,
                  file_path='data.csv',
@@ -64,10 +64,18 @@ class Scraper:
         data = {'fullname':[],
                 'username':[],
                 'content':[],
-                'tweet_published':[],
-                'hashtags':[],
+                'tweet_published_at':[],
+                'n_comments':[],
+                'n_retweets':[],
+                'n_quotes':[],
+                'n_hearts':[],
                 'img_avatar':[],
-                'images':[]}
+                'images':[],
+                'quote':[],
+                'third_party':[],
+                'verified':[],
+                'urls':[],
+                'hashtags':[]}
 
         # Paths for text elements
         text_fields = ['div#m.main-tweet a.fullname',
@@ -75,19 +83,25 @@ class Scraper:
                        'div#m.main-tweet div.tweet-content',
                        'div#m.main-tweet p.tweet-published']
 
-        # Path for hashtags
-        hashtag_field = ['div#m.main-tweet div.tweet-content > a']
+        stats_fields = ['div#m.main-tweet span.icon-comment',
+                        'div#m.main-tweet span.icon-retweet',
+                        'div#m.main-tweet span.icon-quote',
+                        'div#m.main-tweet span.icon-heart']
 
-        # Path for image
+        # Path for images
         img_fields = ['div#m.main-tweet img.avatar',
                       'div#m.main-tweet a.still-image img']
 
-        # Path for all fields
-        paths = text_fields + hashtag_field + img_fields
+        # Quotes and third-party urls
+        quote_fields = ['div#m.main-tweet a.quote-link',
+                        'div#m.main-tweet a.card-container']
+
+        # All paths
+        paths = text_fields + stats_fields + img_fields + quote_fields
 
         for url in urls:
             response = requests.request("GET", 
-                                        f"https://nitter.net{url}",
+                                        f"https://nitter.net/DyegoNascymento/status/1654917920131104770#m",
                                         headers=self._headers) # 
 
             tree = self.html_parser(response)
@@ -97,33 +111,68 @@ class Scraper:
                 # text data
                 if field in text_fields:
                     data[key].append(self.get_text(tree, field))
+                # tweet stats
+                if field in stats_fields:
+                    data[key].append(self.get_stats(tree, field))
                 # image data
                 if field in img_fields:
                     data[key].append(self.get_img(tree, field))
-                # hashtags
-                if field in hashtag_field:
-                    data[key].append(self.get_hashtags(tree, field))
-                
+                # mentioning data
+                if field in quote_fields:
+                    data[key].append(self.get_urls(tree, field))
+            
+            # Collect hashtags and urls
+            hashtags, urls = self.get_hash_url(tree, 'div#m.main-tweet div.tweet-content > a')
+            data['urls'].append(urls)
+            data['hashtags'].append(hashtags)
+            data['verified'].append(self.get_verified(tree))
+
             print(f"Collected: {len(data['username'])}") # Using username key as counter because all users must have username
+            print(data)
             sleep(self.delay)
-        utils.save_data_as_csv(data)
+
+    def get_verified(self, tree):
+        if tree.cssselect('div#m.main-tweet span.icon-ok')[0].get('title') == "Verified account":
+            return True
+        return False
 
     def get_text(self, tree, field):
-        elem = tree.cssselect(field)[0]
-        return elem.text.strip()
+        text = tree.cssselect(field)[0]
+        try:
+            return ''.join(text.text_content())
+        except AttributeError:
+            return ''
 
     def get_img(self, tree, field):
         images = tree.cssselect(field)
-        if len(images) == 0:
+        try:
+            return [f"https://nitter.net{image.get('src').strip()}" for image in images]
+        except AttributeError: # If the element is not present, return an empty list
             return []
-        return [f"https://nitter.net{image.get('src').strip()}" for image in images]
     
-    def get_hashtags(self, tree, field):
-        elems = tree.cssselect(field)
-        if len(elems) == 0:
+    def get_urls(self, tree, field):
+        urls = tree.cssselect(field)
+        try:
+            return [url.get('href') for url in urls]
+        except AttributeError:
             return []
-        return [potential_hashtag.text_content() for potential_hashtag in elems 
-                if utils.is_hashtag(potential_hashtag.text_content())]
+
+    def get_stats(self, tree, field):
+        stat = tree.cssselect(field)[0].getparent()
+        try:
+            return utils.string_to_int(stat.text_content().strip())
+        except ValueError:
+            return 0
+
+    def get_hash_url(self, tree, field):
+        elems = tree.cssselect(field)
+        hashtags = [potential_hashtag.text_content() for potential_hashtag in elems 
+                    if utils.is_hashtag(potential_hashtag.text_content())]
+
+        urls = [potential_hashtag.get('href') for potential_hashtag in elems 
+                if not utils.is_hashtag(potential_hashtag.text_content())]
+
+        return hashtags, urls
 
     def page_url(self, tree):
         link = tree.cssselect('div.show-more > a')
@@ -136,7 +185,6 @@ class Scraper:
         # Extract links with class 'tweet-link'
         return [a.get('href') for a in tree.cssselect('a.tweet-link')]
         
-
 
 if __name__ == "__main__":
     main()
