@@ -12,7 +12,6 @@ pyppeteer==1.0.2
 pyquery==2.0.0
 requests==2.30.0
 requests-html==0.10.0
-soupsieve==2.4.1
 tqdm==4.65.0
 types-requests==2.30.0.0
 types-urllib3==1.26.25.12
