@@ -42,7 +42,7 @@ Aqui está a tabela atualizada com a informação de quais parâmetros são opci
 
 # **Campos disponíveis**
 
-| Field Name         | Description                                                           |
+| Variável        | Descrição                                                           |
 |--------------------|-----------------------------------------------------------------------|
 | fullname           | Nome completo do autor da publicação                                   |
 | username           | Nome de usuário do autor da publicação                                 |
