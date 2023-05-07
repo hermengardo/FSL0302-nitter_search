@@ -12,7 +12,7 @@ class NitterSearch:
                  query: str,
                  file_path='data.csv',
                  delay=0.01,
-                 random_time=True,
+                 random_time=False,
                  random_interval=(0, 1),
                  seed=42) -> None:
         # Encode special characters to hexadecimal representation
