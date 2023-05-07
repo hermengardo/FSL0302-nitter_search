@@ -45,21 +45,21 @@ if __name__ == "__main__":
 
 ## **Campos disponíveis**
 
-| Variável        | Descrição                                                           |
-|--------------------|-----------------------------------------------------------------------|
-| fullname           | Nome completo do autor da publicação                                   |
-| username           | Nome de usuário do autor da publicação                                 |
-| content            | Texto da publicação                                                   |
-| publishedAt | Data e hora em que a publicação foi feita                              |
-| comments         | Número de comentários na publicação                                    |
-| retweets         | Número de retweets da publicação                                       |
-| quotes           | Número de citações da publicação                                       |
-| hearts           | Número de curtidas/likes da publicação                                 |
-| imgAvatar         | Foto de perfil do autor da publicação                                  |
-| images             | Imagens incluídas na publicação                                         |
-| videos             | Vídeos incluídos na publicação                                         |
-| quote              | Links para qualquer tweet citado ou conteúdo externo                   |
-| externalLink        | Links para qualquer conteúdo de terceiros mencionado na publicação     |
-| repliedBy         | Nomes de usuários que responderam à publicação                          |
-| urls               | URLs mencionadas na publicação                                          |
-| hashtags           | Hashtags usadas na publicação                                          |
+| Variável      | Descrição                                                   | Tipo |
+|---------------|-------------------------------------------------------------|--------------|
+| fullname      | Nome completo do autor da publicação                         | str          |
+| username      | Nome de usuário do autor da publicação                       | str          |
+| content       | Texto da publicação                                          | str          |
+| publishedAt   | Data e hora em que a publicação foi feita                     | str          |
+| comments      | Número de comentários na publicação                          | int          |
+| retweets      | Número de retweets da publicação                              | int          |
+| quotes        | Número de citações da publicação                              | int          |
+| hearts        | Número de curtidas/likes da publicação                        | int          |
+| imgAvatar     | URL da foto de perfil do autor da publicação                  | str          |
+| images        | URLs das imagens incluídas na publicação                      | List[str]    |
+| videos        | URLs dos vídeos incluídos na publicação                       | List[str]    |
+| mentions      | Nomes de usuários mencionados na publicação                   | List[str]    |
+| externalLink  | URLs de conteúdo mencionado externo à plataforma              | List[str]    |
+| repliedBy     | Nomes de usuários que responderam à publicação                | List[str]    |
+| urls          | URLs mencionadas na publicação                                | List[str]    |
+| hashtags      | Hashtags usadas na publicação                                 | List[str]    |
