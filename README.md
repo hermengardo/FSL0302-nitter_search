@@ -1,8 +1,12 @@
-# **Introdução**
+# FSL0302-nitter_search
+[![CodeFactor](https://www.codefactor.io/repository/github/hermengardo/fsl0302-nitter_search/badge)](https://www.codefactor.io/repository/github/hermengardo/fsl0302-nitter_search)
+[![Actively Maintained](https://img.shields.io/badge/Maintenance%20Level-Actively%20Maintained-green.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)
+
+## **Introdução**
 - Web scraper desenvolvido para coletar tweets do Nitter.net, um front-end alternativo ao Twitter que oferece aos usuários uma experiência mais segura e privada. O programa é especialmente útil para pesquisadores e analistas de dados que desejam coletar tweets sem depender de uma conta ou da API do Twitter.
 - Desenvolvido para a matéria de Práticas de Pesquisa em Sociologia (USP/2023).
 
-# **Instalação**
+## **Instalação**
 1. Clone o repositório:
 ```sh
 git clone https://github.com/hermengardo/FSL0302-nitter_search.git
@@ -15,7 +19,7 @@ pip install -r requirements.txt
 
 3. Edite e execute o arquivo `main.py`.
 
-## Exemplo de uso
+### Exemplo de uso
 
 ```python
 from scraper import NitterSearch
@@ -28,7 +32,7 @@ if __name__ == "__main__":
     main()
 ```
 
-# **Parâmetros**
+## **Parâmetros**
 Aqui está a tabela atualizada com a informação de quais parâmetros são opcionais na classe `NitterSearch`:
 
 | Parâmetro | Tipo | Descrição | Opcional |
@@ -40,7 +44,7 @@ Aqui está a tabela atualizada com a informação de quais parâmetros são opci
 | `random_interval` | tuple | O intervalo de tempo em segundos para adicionar a cada solicitação de coleta de tweets. O padrão é (0, 1), o que significa que um tempo aleatório entre 0 e 1 segundo será adicionado a cada solicitação de coleta de tweets (caso `random_time=True`). | Sim |
 | `seed` | int | Seed do gerador de números aleatórios. | Sim |
 
-# **Campos disponíveis**
+## **Campos disponíveis**
 
 | Variável        | Descrição                                                           |
 |--------------------|-----------------------------------------------------------------------|
