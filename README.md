@@ -1,5 +1,5 @@
 # **Introdução**
-- Este é um repositório do programa de web scraping desenvolvido para coletar tweets do Nitter.net e extrair informações relevantes, como nome do usuário, conteúdo, comentários, retweets, imagens, vídeos, hashtags e links externos. O Nitter.net é uma plataforma alternativa de mídia social ao Twitter, projetada para fornecer uma experiência mais segura e privada aos usuários. Este programa é útil para pesquisadores e analistas de dados que desejam coletar informações de mídia social sem depender diretamente dos serviços do Twitter.
+- Web scraper desenvolvido para coletar tweets do Nitter.net, um front-end alternativo ao Twitter que oferece aos usuários uma experiência mais segura e privada. O programa é especialmente útil para pesquisadores e analistas de dados que desejam coletar tweets sem depender de uma conta ou da API do Twitter.
 - Desenvolvido para a matéria de Práticas de Pesquisa em Sociologia (USP/2023).
 
 # **Instalação**
