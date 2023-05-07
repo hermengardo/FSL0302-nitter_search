@@ -36,11 +36,11 @@ if __name__ == "__main__":
 
 | Parâmetro | Tipo | Descrição | Opcional |
 | --- | --- | --- | --- |
-| `query` | str | A consulta usada para buscar tweets. | Não |
-| `file_path` | str | O caminho do arquivo onde os tweets coletados serão salvos. O padrão é 'data.csv'. | Sim |
-| `delay` | float | O tempo de espera em segundos entre as solicitações de coleta de tweets. O padrão é 0,01 segundos. | Sim |
-| `random_time` | bool | Um valor booleano que indica se deve ser adicionado um tempo aleatório entre as solicitações. O padrão é `False`. | Sim |
-| `random_interval` | tuple | O intervalo de tempo em segundos para adicionar a cada solicitação de coleta de tweets. O padrão é (0, 1), o que significa que um tempo aleatório entre 0 e 1 segundo será adicionado a cada solicitação de coleta de tweets (caso `random_time=True`). | Sim |
+| `query` | str | Consulta usada para buscar os tweets. | Não |
+| `file_path` | str | Arquivo onde os dados serão salvos. O padrão é 'data.csv'. | Sim |
+| `delay` | float | Tempo de espera entre uma solitação (request) e outra. O padrão é 0,01 segundos. | Sim |
+| `random_time` | bool | Indica se um tempo aleatório deve ser adicionado ao delay. O padrão é `False`. | Sim |
+| `random_interval` | tuple | Intervalo de tempo para o random_time. O padrão é (0, 1), o que significa que um tempo aleatório entre 0 e 1 segundo será adicionado a cada solicitação de coleta (caso `random_time=True`). | Sim |
 | `seed` | int | Seed do gerador de números aleatórios. | Sim |
 
 ## **Campos disponíveis**
