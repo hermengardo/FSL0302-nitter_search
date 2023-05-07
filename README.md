@@ -33,7 +33,6 @@ if __name__ == "__main__":
 ```
 
 ## **Parâmetros**
-Aqui está a tabela atualizada com a informação de quais parâmetros são opcionais na classe `NitterSearch`:
 
 | Parâmetro | Tipo | Descrição | Opcional |
 | --- | --- | --- | --- |
