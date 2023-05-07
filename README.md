@@ -3,7 +3,7 @@
 [![Actively Maintained](https://img.shields.io/badge/Maintenance%20Level-Actively%20Maintained-green.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)
 
 ## **Introdução**
-- Web scraper desenvolvido para coletar tweets do Nitter.net, um front-end alternativo ao Twitter que oferece aos usuários uma experiência mais segura e privada. O programa é especialmente útil para pesquisadores e analistas de dados que desejam coletar tweets sem depender de uma conta ou da API do Twitter.
+- Web scraper desenvolvido para coletar tweets do Nitter.net, um front-end alternativo ao Twitter que oferece aos usuários uma plataforma focada em privacidade. Este scraper é especialmente útil para pesquisadores e analistas de dados que desejam coletar tweets sem depender de uma conta ou da API do Twitter.
 - Desenvolvido para a matéria de Práticas de Pesquisa em Sociologia (USP/2023).
 
 ## **Instalação**
