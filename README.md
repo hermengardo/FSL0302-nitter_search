@@ -40,8 +40,8 @@ if __name__ == "__main__":
 | `file_path` | str | Arquivo onde os dados serão salvos. O padrão é 'data.csv'. | Sim |
 | `delay` | float | Tempo de espera entre uma solitação (request) e outra. O padrão é 0,01 segundos. | Sim |
 | `random_time` | bool | Indica se um tempo aleatório deve ser adicionado ao delay. O padrão é `False`. | Sim |
-| `random_interval` | tuple | Intervalo de tempo para o random_time. O padrão é (0, 1), o que significa que um tempo aleatório entre 0 e 1 segundo será adicionado a cada solicitação de coleta (caso `random_time=True`). | Sim |
-| `seed` | int | Seed do gerador de números aleatórios. | Sim |
+| `random_interval` | tuple | Intervalo de tempo aleatório. O padrão é (0, 1), i.e. um tempo aleatório entre 0 e 1 segundo será adicionado a cada solicitação de coleta (caso `random_time=True`). | Sim |
+| `seed` | int | Seed do gerador de números pseudoaleatórios. | Sim |
 
 ## **Campos disponíveis**
 
