@@ -48,16 +48,16 @@ A tabela já está em formato Markdown, mas posso ajustá-la para melhorar a vis
 | fullname           | Nome completo do autor da publicação                                   |
 | username           | Nome de usuário do autor da publicação                                 |
 | content            | Texto da publicação                                                   |
-| tweet_published_at | Data e hora em que a publicação foi feita                              |
-| n_comments         | Número de comentários na publicação                                    |
-| n_retweets         | Número de retweets da publicação                                       |
-| n_quotes           | Número de citações da publicação                                       |
-| n_hearts           | Número de curtidas/likes da publicação                                 |
-| img_avatar         | Foto de perfil do autor da publicação                                  |
+| publishedAt | Data e hora em que a publicação foi feita                              |
+| comments         | Número de comentários na publicação                                    |
+| retweets         | Número de retweets da publicação                                       |
+| quotes           | Número de citações da publicação                                       |
+| hearts           | Número de curtidas/likes da publicação                                 |
+| imgAvatar         | Foto de perfil do autor da publicação                                  |
 | images             | Imagens incluídas na publicação                                         |
 | videos             | Vídeos incluídos na publicação                                         |
 | quote              | Links para qualquer tweet citado ou conteúdo externo                   |
-| third_party        | Links para qualquer conteúdo de terceiros mencionado na publicação     |
-| replied_by         | Nomes de usuários que responderam à publicação                          |
+| externalLink        | Links para qualquer conteúdo de terceiros mencionado na publicação     |
+| repliedBy         | Nomes de usuários que responderam à publicação                          |
 | urls               | URLs mencionadas na publicação                                          |
 | hashtags           | Hashtags usadas na publicação                                          |
