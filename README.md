@@ -41,7 +41,6 @@ Aqui está a tabela atualizada com a informação de quais parâmetros são opci
 | `seed` | int | Seed do gerador de números aleatórios. | Sim |
 
 # **Campos disponíveis**
-A tabela já está em formato Markdown, mas posso ajustá-la para melhorar a visualização. Eis a tabela atualizada:
 
 | Field Name         | Description                                                           |
 |--------------------|-----------------------------------------------------------------------|
