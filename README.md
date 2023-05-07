@@ -1,18 +1,63 @@
-# FSL0302-nitter_search
-The function scrapes the following data for each publication:
-            'fullname': Full name of the publication author
-            'username': Username of the publication author
-            'content': Text content of the publication
-            'tweet_published_at': Date and time when the publication was made
-            'n_comments': Number of comments on the publication
-            'n_retweets': Number of retweets of the publication
-            'n_quotes': Number of quotes of the publication
-            'n_hearts': Number of likes/hearts of the publication
-            'img_avatar': Profile picture of the publication author
-            'images': Images included in the publication
-            'videos': Videos included in the publication
-            'quote': Links to any quoted tweet or external content
-            'third_party': Links to any third-party content mentioned in the publication
-            'replied_by': Usernames of users who replied to the publication
-            'urls': URLs mentioned in the publication
-            'hashtags': Hashtags mentioned in the publication
+# **Introdução**
+- Este é um repositório do programa de web scraping desenvolvido para coletar tweets do Nitter.net e extrair informações relevantes, como nome do usuário, conteúdo, comentários, retweets, imagens, vídeos, hashtags e links externos. O Nitter.net é uma plataforma alternativa de mídia social ao Twitter, projetada para fornecer uma experiência mais segura e privada aos usuários. Este programa é útil para pesquisadores e analistas de dados que desejam coletar informações de mídia social sem depender diretamente dos serviços do Twitter.
+- Desenvolvido para a matéria de Práticas de Pesquisa em Sociologia (USP/2023).
+
+# **Instalação**
+1. Clone o repositório:
+```sh
+git clone https://github.com/hermengardo/FSL0302-nitter_search.git
+```
+
+2. Instale as dependências:
+```sh
+pip install -r requirements.txt
+```
+
+3. Edite e execute o arquivo `main.py`.
+
+## Exemplo de uso
+
+```python
+from scraper import NitterSearch
+
+def main():
+    NitterSearch(query='sua_query')
+
+
+if __name__ == "__main__":
+    main()
+```
+
+# **Parâmetros**
+Aqui está a tabela atualizada com a informação de quais parâmetros são opcionais na classe `NitterSearch`:
+
+| Parâmetro | Tipo | Descrição | Opcional |
+| --- | --- | --- | --- |
+| `query` | str | A consulta usada para buscar tweets. | Não |
+| `file_path` | str | O caminho do arquivo onde os tweets coletados serão salvos. O padrão é 'data.csv'. | Sim |
+| `delay` | float | O tempo de espera em segundos entre as solicitações de coleta de tweets. O padrão é 0,01 segundos. | Sim |
+| `random_time` | bool | Um valor booleano que indica se deve ser adicionado um tempo aleatório entre as solicitações. O padrão é `False`. | Sim |
+| `random_interval` | tuple | O intervalo de tempo em segundos para adicionar a cada solicitação de coleta de tweets. O padrão é (0, 1), o que significa que um tempo aleatório entre 0 e 1 segundo será adicionado a cada solicitação de coleta de tweets (caso `random_time=True`). | Sim |
+| `seed` | int | Seed do gerador de números aleatórios. | Sim |
+
+# **Campos disponíveis**
+A tabela já está em formato Markdown, mas posso ajustá-la para melhorar a visualização. Eis a tabela atualizada:
+
+| Field Name         | Description                                                           |
+|--------------------|-----------------------------------------------------------------------|
+| fullname           | Nome completo do autor da publicação                                   |
+| username           | Nome de usuário do autor da publicação                                 |
+| content            | Texto da publicação                                                   |
+| tweet_published_at | Data e hora em que a publicação foi feita                              |
+| n_comments         | Número de comentários na publicação                                    |
+| n_retweets         | Número de retweets da publicação                                       |
+| n_quotes           | Número de citações da publicação                                       |
+| n_hearts           | Número de curtidas/likes da publicação                                 |
+| img_avatar         | Foto de perfil do autor da publicação                                  |
+| images             | Imagens incluídas na publicação                                         |
+| videos             | Vídeos incluídos na publicação                                         |
+| quote              | Links para qualquer tweet citado ou conteúdo externo                   |
+| third_party        | Links para qualquer conteúdo de terceiros mencionado na publicação     |
+| replied_by         | Nomes de usuários que responderam à publicação                          |
+| urls               | URLs mencionadas na publicação                                          |
+| hashtags           | Hashtags usadas na publicação                                          |
