@@ -14,7 +14,9 @@ class NitterSearch:
                  delay=0.01,
                  random_time=False,
                  random_interval=(0, 1),
-                 seed=42) -> None:
+                 seed=42,
+                 timeout_wait=60,
+                 retries=3) -> None:
         # Encode special characters to hexadecimal representation
         query = utils.encode_string(query)
         # Setting up the request
@@ -36,6 +38,10 @@ class NitterSearch:
             self._delay = delay + random.uniform(*random_interval)
         else:
             self._delay = delay
+
+        # Set connection error handler parameters
+        self._timeout_wait = timeout_wait
+        self._retries = retries
 
         # Set filepath
         self._file_path = file_path
@@ -60,9 +66,11 @@ class NitterSearch:
         while True:
             try:
                 # Send a GET request to the given URL with custom headers.
-                response = requests.request("GET",
-                                            url,
-                                            headers=self._headers)
+                response = requests.get(url, headers=self._headers)
+
+                # Raise an exception if the response was not successful.
+                response.raise_for_status()
+
                 tree = self.html_parser(response)  # Parse the HTML
 
                 # Extract the URLs of the tweets from the parsed HTML tree
@@ -76,6 +84,15 @@ class NitterSearch:
                 utils.save_dict_as_csv(data, self._file_path)
                 page_count += 1
                 print(f"Page {page_count} collected")
+            except requests.exceptions.RequestException as e:
+                if isinstance(e, (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout)) and self._retries > 0:
+                    print(f"Connection error or read timeout occurred. Retrying in {self._timeout_wait} seconds...")
+                    sleep(self._timeout_wait)
+                    self._retries -= 1
+                    continue
+                else:
+                    print("Request failed after multiple retries. Exiting...")
+                    break
             except IndexError:
                 print('Finished')
                 break
@@ -146,7 +163,7 @@ class NitterSearch:
                     data[key].append(self.get_urls(tree, field))
 
             # Scrape data about who replied to the tweet.
-            data['repliedBy'] = self.get_user_replies(tree, clean_url)
+            data['repliedBy'].append(self.get_user_replies(tree, clean_url))
 
             # Scrape hashtags and links mentioned in the tweet.
             hashtags, urls = self.get_hash_url(tree,
