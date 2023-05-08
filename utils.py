@@ -4,6 +4,7 @@ import re
 import urllib.parse
 
 def save_dict_as_csv(data_dict: dict, file_path: str):
+    print('Saving...')
     file_exists = os.path.isfile(file_path)
     with open(file_path, 'a', newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file)
