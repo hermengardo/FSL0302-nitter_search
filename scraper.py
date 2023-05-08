@@ -124,7 +124,8 @@ class NitterSearch:
                 'externalLink': [],
                 'repliedBy': [],
                 'urls': [],
-                'hashtags': []}
+                'hashtags': [],
+                'thread':[]}
 
         # Define CSS selectors for each type of data to scrape
         text_fields = ['div#m.main-tweet a.fullname',
@@ -164,10 +165,9 @@ class NitterSearch:
 
             # Scrape data about who replied to the tweet.
             data['repliedBy'].append(self.get_user_replies(tree, clean_url))
-
+            data['thread'].append(self.get_thread(tree))
             # Scrape hashtags and links mentioned in the tweet.
-            hashtags, urls = self.get_hash_url(tree,
-                                               'div#m.main-tweet div.tweet-content > a')
+            hashtags, urls = self.get_hash_url(tree)
             data['urls'].append(urls)
             data['hashtags'].append(hashtags)
 
@@ -224,8 +224,8 @@ class NitterSearch:
         except ValueError:
             return 0
 
-    def get_hash_url(self, tree: html.HtmlElement, field: str) -> tuple:
-        elems = tree.cssselect(field)
+    def get_hash_url(self, tree: html.HtmlElement) -> tuple:
+        elems = tree.cssselect('div#m.main-tweet div.tweet-content > a')
         hashtags = [potential_hashtag.text_content() for potential_hashtag
                     in elems if utils.is_hashtag(potential_hashtag.text_content())]
 
@@ -233,6 +233,13 @@ class NitterSearch:
                 if not utils.is_hashtag(potential_hashtag.text_content())]
 
         return hashtags, urls
+
+    def get_thread(self, tree) -> str:
+        all_text = tree.cssselect('div.main-thread div.tweet-body div.tweet-content')
+        try:
+            return ' '.join([text.text_content() for text in all_text])
+        except AttributeError:
+            return ''
 
     def page_url(self, tree: html.HtmlElement) -> str:
         #  Extracts the URL of the next page from the HTML tree element.
