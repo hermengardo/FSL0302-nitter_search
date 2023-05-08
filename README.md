@@ -42,7 +42,7 @@ if __name__ == "__main__":
 | `random_time` | bool | Indica se um tempo aleatório deve ser adicionado ao delay. O padrão é `False`. | Sim |
 | `random_interval` | tuple | Intervalo de tempo aleatório. O padrão é (0, 1), i.e. um tempo aleatório entre 0 e 1 segundo será adicionado a cada solicitação de coleta (caso `random_time=True`). | Sim |
 | `seed` | int | Seed do gerador de números pseudoaleatórios. | Sim |
-| `timeout_wait` | float | Tempo de espera (em segundos) antes de tentar novamente se ocorrer um erro de tempo limite de conexão ou de leitura. O padrão é 60 segundos. | Sim |
+| `timeout_wait` | int | Tempo de espera (em segundos) antes de tentar novamente se ocorrer um erro de tempo limite de conexão ou de leitura. O padrão é 60 segundos. | Sim |
 | `retries` | int | Número máximo de vezes que a classe tentará fazer a solicitação novamente se ocorrer um erro de tempo limite de conexão ou de leitura. O padrão é 3. | Sim |
 
 ## **Campos disponíveis**
