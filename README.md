@@ -65,3 +65,4 @@ if __name__ == "__main__":
 | repliedBy     | Nomes de usuários que responderam à publicação                | List[str]    |
 | urls          | URLs mencionadas na publicação                                | List[str]    |
 | hashtags      | Hashtags usadas na publicação                                 | List[str]    |
+| thread        | O conteúdo completo de uma sequência de tweets do Twitter | str          |
