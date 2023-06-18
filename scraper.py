@@ -6,6 +6,8 @@ from lxml import html
 
 import utils
 
+global BASE_URL
+BASE_URL = "https://nitter.it"
 
 class NitterSearch:
     def __init__(self,
@@ -18,9 +20,10 @@ class NitterSearch:
                  timeout_wait=60,
                  retries=3) -> None:
         # Encode special characters to hexadecimal representation
+        
         query = utils.encode_string(query)
         # Setting up the request
-        url = f"https://nitter.net/search?f=tweets&q={query}"
+        url = f"{BASE_URL}/search?f=tweets&q={query}"
         self._headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0",
                          "Accept": "*/*",
                          "Accept-Language": "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3",
@@ -54,7 +57,7 @@ class NitterSearch:
 
     def scrape_page(self, url: str):
         """
-        Scrapes all data from Nitter.net for a given search page.
+        Scrapes all data from Nitter for a given search page.
 
         Args:
         - url (str): The URL of the search page to scrape.
@@ -77,7 +80,7 @@ class NitterSearch:
                 tweets = self.tweets_urls(tree)
 
                 # Generate the URL of the next page to scrape based on the current page.
-                url = f'https://nitter.net/search{self.page_url(tree)}'
+                url = f"{BASE_URL}/search{self.page_url(tree)}"
 
                 # Scrape the publications for each tweet URL found.
                 data = self.scrape_publication(tweets)
@@ -145,7 +148,7 @@ class NitterSearch:
 
         # Loop through each tweet URL and scrape the data.
         for url in urls:
-            clean_url = f"https://nitter.net{url}"
+            clean_url = f"{BASE_URL}{url}"
             response = requests.request("GET",
                                         clean_url,
                                         headers=self._headers)
@@ -205,7 +208,7 @@ class NitterSearch:
     def get_img(self, tree: html.HtmlElement, field: str) -> list:
         images = tree.cssselect(field)
         try:
-            return [f"https://nitter.net{image.get('src').strip()}"
+            return [f"{BASE_URL}{image.get('src').strip()}"
                     for image in images]
         except AttributeError:
             return []
