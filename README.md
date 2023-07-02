@@ -1,6 +1,5 @@
 # FSL0302-nitter_search
 [![CodeFactor](https://www.codefactor.io/repository/github/hermengardo/fsl0302-nitter_search/badge)](https://www.codefactor.io/repository/github/hermengardo/fsl0302-nitter_search)
-[![Actively Maintained](https://img.shields.io/badge/Maintenance%20Level-Actively%20Maintained-green.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)
 
 ## **Introdução**
 - Web scraper desenvolvido para coletar tweets do Nitter.net, um front-end alternativo ao Twitter que se concentra em oferecer maior privacidade aos usuários.
